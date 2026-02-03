@@ -68,7 +68,7 @@ class BotContext(
     }
 
     suspend fun downloadPhoto(): ByteArray {
-        val info = message?.photo?.last()?: return byteArrayOf()
+        val info = message?.photo?.last() ?: return byteArrayOf()
         return bot.downloadPhoto(info.fileId)
     }
 }
