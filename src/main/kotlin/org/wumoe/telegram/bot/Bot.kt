@@ -190,7 +190,6 @@ class Bot(
 
     private suspend fun pollingLoop() {
         var offset: Long? = null
-
         while (currentCoroutineContext().isActive) {
             val updates = getUpdates(offset)
             for (u in updates) {
