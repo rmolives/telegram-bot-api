@@ -17,6 +17,10 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.4.0")
 }
 
+tasks.jar {
+    from(configurations.runtimeClasspath.get().filter { it.exists() }.map { if (it.isDirectory) it else zipTree(it) })
+}
+
 kotlin {
     jvmToolchain(17)
 }
