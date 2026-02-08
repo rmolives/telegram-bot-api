@@ -15,6 +15,7 @@ class BotContext(
     val message get() = update.message
     val chat get() = message?.chat
     val text get() = message?.text
+    val callback get() = update.callbackQuery
     val caption get() = message?.caption
     val from get() = message?.from
 
@@ -29,12 +30,13 @@ class BotContext(
     }
 
     suspend fun reply(
-        text: String, quote: Boolean = false, quoteId: Long? = messageId,
+        text: String, chatId: Long? = chat?.id ?: callback?.message?.chat?.id,
+        quote: Boolean = false, quoteId: Long? = messageId,
         keyboard: InlineKeyboardMarkup? = null, parseMode: ParseMode = ParseMode.PLAIN
     ) {
-        val chatId = chat?.id ?: return
+        val id = chatId ?: return
         bot.sendMessage(
-            chatId = chatId,
+            chatId = id,
             text = if (parseMode == ParseMode.PLAIN) escape(text) else text,
             replyToMessageId = if (quote) quoteId else null,
             keyboard = keyboard,
@@ -43,14 +45,14 @@ class BotContext(
     }
 
     suspend fun replyPhoto(
-        file: File, caption: String? = null,
-        quote: Boolean = false, quoteId: Long? = messageId,
+        file: File, chatId: Long? = chat?.id ?: callback?.message?.chat?.id,
+        caption: String? = null, quote: Boolean = false, quoteId: Long? = messageId,
         keyboard: InlineKeyboardMarkup? = null,
         parseMode: ParseMode = ParseMode.PLAIN
     ) {
-        val chatId = chat?.id ?: return
+        val id = chatId ?: return
         bot.sendPhoto(
-            chatId = chatId, file = file, caption =
+            chatId = id, file = file, caption =
                 if (caption == null) null
                 else if (parseMode == ParseMode.PLAIN) escape(caption) else caption,
             replyToMessageId = if (quote) quoteId else null,
