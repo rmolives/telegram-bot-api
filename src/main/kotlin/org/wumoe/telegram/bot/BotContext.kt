@@ -12,7 +12,7 @@ class BotContext(
     val update: Update
 ) {
     val messageId get() = message?.message_id
-    val message get() = update.message
+    val message get() = update.message ?: callback?.message
     val chat get() = message?.chat
     val text get() = message?.text
     val callback get() = update.callbackQuery
@@ -30,7 +30,7 @@ class BotContext(
     }
 
     suspend fun reply(
-        text: String, chatId: Long? = chat?.id ?: callback?.message?.chat?.id,
+        text: String, chatId: Long? = chat?.id,
         quote: Boolean = false, quoteId: Long? = messageId,
         keyboard: InlineKeyboardMarkup? = null, parseMode: ParseMode = ParseMode.PLAIN
     ) {
@@ -45,7 +45,7 @@ class BotContext(
     }
 
     suspend fun replyPhoto(
-        file: File, chatId: Long? = chat?.id ?: callback?.message?.chat?.id,
+        file: File, chatId: Long? = chat?.id,
         caption: String? = null, quote: Boolean = false, quoteId: Long? = messageId,
         keyboard: InlineKeyboardMarkup? = null,
         parseMode: ParseMode = ParseMode.PLAIN
